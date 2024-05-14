@@ -1,15 +1,15 @@
 use tock_registers::{register_bitfields, register_structs, registers};
 
 register_structs! {
-    pub Sysctrl {
-        (0x00 => _reserved0),
-        (0x30 => pub ahben: registers::ReadWrite<u32, ahben::Register>),
+    pub Sysctrl {// 下面的数字是寄存器的地址偏移
+        (0x00 => _reserved0),//保留，留空的
+        (0x30 => pub ahben: registers::ReadWrite<u32, ahben::Register>),// 记载了寄存器位的功能，读写权限、和长度（32）
         (0x34 => @END),
     }
 }
 
 register_structs! {
-    pub Gpioc {
+    pub Gpioc {//同理
         (0x00 => pub dir: registers::ReadWrite<u32, dir::Register>),
         (0x04 => pub opendrain: registers::ReadWrite<u32, opendrain::Register>),
         (0x08 => pub speed: registers::ReadWrite<u32, speed::Register>),
@@ -36,15 +36,16 @@ register_structs! {
     }
 }
 
+// 这里是寄存器位的详细说明
 register_bitfields![u32,
     pub ahben [
-        GPIOC OFFSET(6) NUMBITS(1) [
+        GPIOC OFFSET(6) NUMBITS(1) [// 比如我希望启用这个功能，我就需要操作第7位的一位，选择enable写入1
             enable = 1,
             disable = 0,
         ],
     ],
     pub lckr [
-        KEYPIN13 OFFSET(0) NUMBITS(32) [
+        KEYPIN13 OFFSET(0) NUMBITS(32) [ // 比如我希望启用这个功能，我就需要操作第1位的32位，也就是全部，选择unlock写入0x5A5AFFFF
             unlock = 0x5A5AFFFF,
             lock = 0x0000,
         ],
